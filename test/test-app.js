@@ -17,7 +17,19 @@ describe('simple-webapp:app', function () {
     assert.file([
       'bower.json',
       'package.json',
+      'gulpfile.js',
       '.editorconfig',
+      '.gitignore',
+      '.jshintrc'
+    ]);
+  });
+  it('creates folders', function () {
+    assert.dir([
+      'bower.json',
+      'package.json',
+      'gulpfile.js',
+      '.editorconfig',
+      '.gitignore',
       '.jshintrc'
     ]);
   });
