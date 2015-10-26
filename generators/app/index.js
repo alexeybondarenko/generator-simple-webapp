@@ -64,14 +64,20 @@ AppGenerator.prototype.projectfiles = function projectfiles() {
   this.copy('.editorconfig', '.editorconfig');
 };
 AppGenerator.prototype.packageJSON = function packageJSON() {
-  this.template('package.json', 'package.json');
+  var pkg = require(this.templatePath('package.json'));
+  pkg.name = this.appname;
+  this.fs.writeJSON(this.destinationPath('package.json'), pkg);
 };
 AppGenerator.prototype.gulpfile = function gruntfile() {
   this.template('gulpfile.js', 'gulpfile.js');
 };
 
 AppGenerator.prototype.bower = function bower() {
-  this.template('bower.json', 'bower.json');
+  var bowerJson = require(this.templatePath('bower.json'));
+  bowerJson.name = this.appname;
+  this.fs.writeJSON(this.destinationPath('bower.json'), bowerJson);
+
+  //this.template('bower.json', 'bower.json');
   //this.copy('bowerrc', '.bowerrc');
 };
 
@@ -138,8 +144,12 @@ AppGenerator.prototype.app = function app() {
   //this.mkdir('src/js');
   //this.mkdir('src/static');
 
-  this.template('src/static/index.html', 'src/static/index.html');
-  this.template('src/js/app.js', 'src/js/app.js');
-
-  //this.copy('app.sass', 'src/css/app.sass');
+  var templateFiles = [
+    'src/static/404.html',
+    'src/jade/index.jade',
+    'src/js/app.js'
+  ];
+  templateFiles.forEach(function (name) {
+    this.template(name, name);
+  }.bind(this));
 };

@@ -7,6 +7,7 @@ var gulp         = require('gulp'),
     browserSync  = require('browser-sync'),
     compass      = require('gulp-compass'),
     autoprefixer = require('gulp-autoprefixer'),
+    jade         = require('gulp-jade'),
     ghPages      = require('gulp-gh-pages');
 
 // Web Server
@@ -76,11 +77,19 @@ gulp.task('copy-bower', function() {
         .pipe(gulp.dest('./www'));
 });
 
+// Jade to HTML
+gulp.task('build-jade', function() {
+  return gulp.src('src/jade/*.jade')
+    .pipe(jade({pretty: true}))
+    .pipe(gulp.dest('www'));
+});
+
 // Watch for for changes
 gulp.task('watch', function() {
     gulp.watch('./src/css/**/*', ['build-styles']);
     gulp.watch('./src/images/**/*', ['copy-images', 'build-styles']);
     gulp.watch('./src/js/**/*', ['copy-scripts']);
+    gulp.watch('./src/jade/**/*', ['build-jade']);
     gulp.watch('./src/bower_components/**/*.js', ['copy-bower']);
     gulp.watch('./src/static/**/*', ['copy-statics']);
 });
@@ -99,4 +108,4 @@ gulp.task('deploy', ['deploy-prefix'], function() {
 
 // Base tasks
 gulp.task('default', sequence('build', ['server', 'watch']));
-gulp.task('build', sequence('clean', ['copy-bower','copy-images','copy-statics', 'copy-scripts', 'build-styles']));
+gulp.task('build', sequence('clean', ['copy-bower','copy-images','copy-statics', 'copy-scripts', 'build-styles', 'build-jade']));
